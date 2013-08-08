@@ -14,6 +14,8 @@ platforms:
     disable_ssl_verification: true
     openstack_tenant: <%= ENV['OS_TENANT'] %>
     username: ubuntu
+  run_list:
+  - recipe[apt] 
 - name: centos-6.4
   driver_config:
     openstack_username: <%= ENV['OS_USERNAME'] %>
