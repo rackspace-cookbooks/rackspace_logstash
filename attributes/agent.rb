@@ -19,7 +19,7 @@ default['logstash']['agent']['upstart_respawn_timeout'] = 30
 default['logstash']['agent']['init_method'] = 'native' # native or runit
 
 # logrotate options for logstash agent
-default['logstash']['agent']['logrotate']['options'] = [ "missingok", "notifempty" ]
+default['logstash']['agent']['logrotate']['options'] = %w(missingok notifempty)
 # stop/start on logrotate?
 default['logstash']['agent']['logrotate']['stopstartprepost'] = false
 
