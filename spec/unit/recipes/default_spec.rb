@@ -17,7 +17,7 @@
 
 require 'spec_helper'
 
-describe 'logstash' do
+describe 'rackspace_logstash' do
   logstash_test_platforms.each do |platform, versions|
     describe "on #{platform}" do
       versions.each do |version|
@@ -26,10 +26,10 @@ describe 'logstash' do
           end
           let(:chef_run) do
             runner = ChefSpec::Runner.new(platform: platform.to_s, version: version.to_s)
-            runner.converge('logstash')
+            runner.converge('rackspace_logstash')
           end
           it 'include the default recipe' do
-            expect(chef_run).to include_recipe 'logstash'
+            expect(chef_run).to include_recipe 'rackspace_logstash'
           end
           it 'populate the opt/logstash directory' do
             expect(chef_run).to create_directory('/opt/logstash')

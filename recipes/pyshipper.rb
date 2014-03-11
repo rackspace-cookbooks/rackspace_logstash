@@ -7,7 +7,7 @@
 #
 #
 include_recipe 'build-essential'
-include_recipe 'logstash::default'
+include_recipe 'rackspace_logstash::default'
 include_recipe 'python::pip'
 include_recipe 'git'
 

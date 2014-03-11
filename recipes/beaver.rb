@@ -3,7 +3,7 @@
 # Recipe:: beaver
 #
 #
-include_recipe 'logstash::default'
+include_recipe 'rackspace_logstash::default'
 include_recipe 'python::default'
 include_recipe 'logrotate'
 

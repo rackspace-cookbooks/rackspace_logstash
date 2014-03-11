@@ -10,7 +10,7 @@
 #
 
 include_recipe 'java'
-include_recipe 'logstash::default'
+include_recipe 'rackspace_logstash::default'
 include_recipe 'logrotate'
 
 include_recipe 'rabbitmq' if node['logstash']['server']['install_rabbitmq']
@@ -86,7 +86,7 @@ if node['logstash']['server']['install_method'] == 'jar'
     notifies :restart, service_resource
   end
 else
-  include_recipe 'logstash::source'
+  include_recipe 'rackspace_logstash::source'
 
   logstash_version = node['logstash']['source']['sha'] || "v#{node['logstash']['server']['version']}"
   link "#{node['logstash']['basedir']}/server/lib/logstash.jar" do

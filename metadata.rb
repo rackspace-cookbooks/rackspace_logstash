@@ -1,10 +1,10 @@
-name             'logstash'
-maintainer       'John E. Vincent'
-maintainer_email 'lusis.org+github.com@gmail.com'
+name             'rackspace_logstash'
+maintainer       'Rackspace'
+maintainer_email 'rackspace-cookbooks@rackspace.com'
 license          'Apache 2.0'
-description      'Installs/Configures logstash'
+description      'Installs and configures logstash'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.6.1'
+version          '1.0.0'
 
 %w{ ubuntu debian redhat centos }.each do |os|
   supports os
