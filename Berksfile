@@ -2,7 +2,7 @@ metadata
 
 cookbook 'ark',  git: 'git://github.com/opscode-cookbooks/ark.git'
 cookbook 'java', github: 'rackspace-cookbooks/java'
-
+cookbook 'rackspace_logrotate', github: 'rackspace-cookbooks/rackspace_logrotate'
 cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 
 group :integration do
