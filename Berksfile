@@ -1,15 +1,12 @@
 metadata
-cookbook 'logrotate'
-cookbook 'yum'
-cookbook 'java'
-cookbook 'build-essential'
-cookbook 'runit'
-cookbook 'apache2', git: 'git://github.com/rackspace-cookbooks/apache2.git'
-cookbook 'yumrepo', git: 'git://github.com/bryanwb/cookbook-yumrepo.git'
-cookbook 'rbenv', git: 'git://github.com/RiotGames/rbenv-cookbook.git'
-cookbook 'rabbitmq', git: 'git://github.com/rackspace-cookbooks/rabbitmq.git'
-cookbook 'elasticsearch', git: 'git://github.com/elasticsearch/cookbook-elasticsearch.git'
+
+cookbook 'ark',  git: 'git://github.com/opscode-cookbooks/ark.git'
+cookbook 'java', github: 'rackspace-cookbooks/java'
+cookbook 'rackspace_logrotate', github: 'rackspace-cookbooks/rackspace_logrotate'
+cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 
 group :integration do
   cookbook 'minitest-handler', git: 'git://github.com/btm/minitest-handler-cookbook.git'
+  cookbook 'rackspace_apt', github: 'rackspace-cookbooks/rackspace_apt'
+  cookbook 'rackspace_yum', github: 'rackspace-cookbooks/rackspace_yum'
 end

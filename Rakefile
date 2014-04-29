@@ -1,17 +1,17 @@
 #!/usr/bin/env rake
 
 cookbook_path = '/tmp/logstash-cookbooks'
-@cookbook = "logstash"
+@cookbook = 'logstash'
 
-desc "install dependencies using Berkshelf"
+desc 'install dependencies using Berkshelf'
 task :install_deps do
   system("berks install --shims #{cookbook_path}")
 end
 
-desc "Runs foodcritic linter"
+desc 'Runs foodcritic linter'
 task :foodcritic do
-  if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
-    sandbox = File.join(File.dirname(__FILE__), %w{tmp foodcritic}, @cookbook)
+  if Gem::Version.new('1.9.2') <= Gem::Version.new(RUBY_VERSION.dup)
+    sandbox = File.join(File.dirname(__FILE__), %w(tmp foodcritic), @cookbook)
     prepare_foodcritic_sandbox(sandbox)
 
     sh "foodcritic --epic-fail any #{File.dirname(sandbox)}"
@@ -20,13 +20,13 @@ task :foodcritic do
   end
 end
 
-task :default => 'foodcritic'
+task default: 'foodcritic'
 
 private
 
 def prepare_foodcritic_sandbox(sandbox)
-  files = %w{*.md *.rb attributes definitions files providers
-    recipes resources templates}
+  files = %w(*.md *.rb attributes definitions files providers
+             recipes resources templates)
 
   rm_rf sandbox
   mkdir_p sandbox
@@ -38,5 +38,5 @@ begin
   require 'kitchen/rake_tasks'
   Kitchen::RakeTasks.new
 rescue LoadError
-  puts ">>>>> Kitchen gem not loaded, omitting tasks" unless ENV['CI']
+  puts '>>>>> Kitchen gem not loaded, omitting tasks' unless ENV['CI']
 end

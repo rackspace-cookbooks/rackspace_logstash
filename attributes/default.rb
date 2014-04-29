@@ -1,27 +1,27 @@
-default['logstash']['basedir'] = '/opt/logstash'
-default['logstash']['user'] = 'logstash'
-default['logstash']['group'] = 'logstash'
-default['logstash']['join_groups'] = []
-default['logstash']['log_dir'] = '/var/log/logstash'
-default['logstash']['pid_dir'] = '/var/run/logstash'
-default['logstash']['create_account'] = true
+default['rackspace_logstash']['basedir'] = '/opt/logstash'
+default['rackspace_logstash']['user'] = 'logstash'
+default['rackspace_logstash']['group'] = 'logstash'
+default['rackspace_logstash']['join_groups'] = []
+default['rackspace_logstash']['log_dir'] = '/var/log/logstash'
+default['rackspace_logstash']['pid_dir'] = '/var/run/logstash'
+default['rackspace_logstash']['create_account'] = true
 
 # roles/flags for various search/discovery
-default['logstash']['graphite_role'] = 'graphite_server'
-default['logstash']['graphite_query'] = "roles:#{node['logstash']['graphite_role']} AND chef_environment:#{node.chef_environment}"
-default['logstash']['elasticsearch_role'] = 'elasticsearch_server'
-default['logstash']['elasticsearch_query'] = "roles:#{node['logstash']['elasticsearch_role']} AND chef_environment:#{node.chef_environment}"
-default['logstash']['elasticsearch_cluster'] = 'logstash'
-default['logstash']['elasticsearch_ip'] = ''
-default['logstash']['elasticsearch_port'] = ''
-default['logstash']['graphite_ip'] = ''
+default['rackspace_logstash']['graphite_role'] = 'graphite_server'
+default['rackspace_logstash']['graphite_query'] = "roles:#{node['rackspace_logstash']['graphite_role']} AND chef_environment:#{node.chef_environment}"
+default['rackspace_logstash']['elasticsearch_role'] = 'elasticsearch_server'
+default['rackspace_logstash']['elasticsearch_query'] = "roles:#{node['rackspace_logstash']['elasticsearch_role']} AND chef_environment:#{node.chef_environment}"
+default['rackspace_logstash']['elasticsearch_cluster'] = 'logstash'
+default['rackspace_logstash']['elasticsearch_ip'] = ''
+default['rackspace_logstash']['elasticsearch_port'] = ''
+default['rackspace_logstash']['graphite_ip'] = ''
 
-default['logstash']['patterns'] = {}
-default['logstash']['install_zeromq'] = false
+default['rackspace_logstash']['patterns'] = {}
+default['rackspace_logstash']['install_zeromq'] = false
 
 case node['platform_family']
-when "rhel"
-  default['logstash']['zeromq_packages'] = [ "zeromq",  "zeromq-devel"]
-when "debian"
-  default['logstash']['zeromq_packages'] = [ "zeromq",  "libzmq-dev"]
+when 'rhel'
+  default['rackspace_logstash']['zeromq_packages'] = %w(zeromq zeromq-devel)
+when 'debian'
+  default['rackspace_logstash']['zeromq_packages'] = %w(zeromq libzmq-dev)
 end

@@ -1,31 +1,62 @@
 description "Logstash"
+gent.conf.erb
 author "Chef"
+gent.conf.erb
 
+gent.conf.erb
 start on (filesystem and net-device-up)
+gent.conf.erb
 stop on runlevel [!2345]
+gent.conf.erb
 
+gent.conf.erb
 respawn
+gent.conf.erb
 respawn limit 5 30
+gent.conf.erb
 limit nofile 65550 65550
+gent.conf.erb
 
+gent.conf.erb
 chdir <%= node['logstash']['basedir'] %>/server
+gent.conf.erb
 setuid <%= node['logstash']['user'] %>
+gent.conf.erb
 
+gent.conf.erb
 script
+gent.conf.erb
   export LOGSTASH_HOME="<%= node['logstash']['basedir'] %>/server"
+gent.conf.erb
   export HOME=$LOGSTASH_HOME
+gent.conf.erb
   export GC_OPTS="<%= node['logstash']['server']['gc_opts'] %>"
+gent.conf.erb
   export JAVA_OPTS="-server -Xms<%= node['logstash']['server']['xms'] %> -Xmx<%= node['logstash']['server']['xmx'] %> -Djava.io.tmpdir=$LOGSTASH_HOME/tmp/ <%= node['logstash']['server']['java_opts'] %> <%= '-Djava.net.preferIPv4Stack=true' if node['logstash']['agent']['ipv4_only'] %>"
+gent.conf.erb
   export LOGSTASH_OPTS="agent -f $LOGSTASH_HOME/etc/logstash.conf -l <%= node['logstash']['log_dir'] %>/logstash.log"
+gent.conf.erb
   <% if node['logstash']['server']['pluginpath'] -%>
+gent.conf.erb
   export LOGSTASH_OPTS="$LOGSTASH_OPTS --pluginpath <%= node['logstash']['server']['pluginpath'] %>"
+gent.conf.erb
   <% end -%>
+gent.conf.erb
   <% if node['logstash']['server']['debug'] -%>
+gent.conf.erb
   export LOGSTASH_OPTS="$LOGSTASH_OPTS -vv"
+gent.conf.erb
   <% end -%>
+gent.conf.erb
   export OPTS="$JAVA_OPTS $GC_OPTS -jar $LOGSTASH_HOME/lib/logstash.jar $LOGSTASH_OPTS"
+gent.conf.erb
 
+gent.conf.erb
   exec /usr/bin/java $OPTS
+gent.conf.erb
 end script
+gent.conf.erb
 
+gent.conf.erb
 emits logstash-server-running
+gent.conf.erb

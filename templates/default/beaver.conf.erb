@@ -1,18 +1,36 @@
 [beaver]
+gent.conf.erb
 <% @conf.each do |key, value| -%>
+gent.conf.erb
 <%= key %>: <%= value %>
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 
+gent.conf.erb
 <% @files.each do |file| -%>
+gent.conf.erb
 <%   file['path'].each do |path| -%>
+gent.conf.erb
 [<%= path %>]
+gent.conf.erb
 type: <%= file['type'] || 'file' %>
+gent.conf.erb
 <% if file.has_key?('tags') -%>
+gent.conf.erb
 tags: <%= file['tags'].join(',') %>
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 <% if file.has_key?('add_field') -%>
+gent.conf.erb
 add_field: <%= file['add_field'].join(',') %>
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 <% end -%>
+gent.conf.erb
