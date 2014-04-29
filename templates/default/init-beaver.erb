@@ -1,142 +1,284 @@
 #!/bin/bash -
+gent.conf.erb
 <% if [ "redhat", "centos","amazon", "fedora" ].include?(@platform) -%>
+gent.conf.erb
 #
+gent.conf.erb
 # beaver
+gent.conf.erb
 #
+gent.conf.erb
 # chkconfig:   - 57 47
+gent.conf.erb
 # description: Log Sender provided by beaver
+gent.conf.erb
 # processname: beaver
+gent.conf.erb
 <% else -%>
+gent.conf.erb
 ### BEGIN INIT INFO
+gent.conf.erb
 # Provides:          beaver
+gent.conf.erb
 # Required-Start:    $local_fs $remote_fs $network
+gent.conf.erb
 # Required-Stop:     $local_fs $remote_fs $network
+gent.conf.erb
 # Default-Start:     2 3 4 5
+gent.conf.erb
 # Default-Stop:      0 1 6
+gent.conf.erb
 # Short-Description: Start up the Beaver at boot time
+gent.conf.erb
 # Description:       Enable Log Sender provided by beaver.
+gent.conf.erb
 ### END INIT INFO
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 BEAVER_NAME='beaver'
+gent.conf.erb
 BEAVER_CMD='<%= @cmd %>'
+gent.conf.erb
 BEAVER_PID='<%= @pid_file %>'
+gent.conf.erb
 BEAVER_USER='<%= @user %>'
+gent.conf.erb
 BEAVER_LOG='<%= @log %>'
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+gent.conf.erb
 export PATH
+gent.conf.erb
 IFS=$' \t\n'
+gent.conf.erb
 export IFS
+gent.conf.erb
 
+gent.conf.erb
 BEAVER_BIN="$(which "${BEAVER_NAME}")"
+gent.conf.erb
 
+gent.conf.erb
 [ -r /etc/init.d/functions ] && . /etc/init.d/functions
+gent.conf.erb
 [ -r /lib/lsb/init-functions ] && . /lib/lsb/init-functions
+gent.conf.erb
 [ -r "/etc/default/${BEAVER_NAME}" ] && . "/etc/default/${BEAVER_NAME}"
+gent.conf.erb
 
+gent.conf.erb
 do_start() {
+gent.conf.erb
     test -f "${BEAVER_BIN}" || exit 0
+gent.conf.erb
     if is_up
+gent.conf.erb
     then
+gent.conf.erb
         echo $'Log Sender server daemon already started.'
+gent.conf.erb
         return 0
+gent.conf.erb
     fi
+gent.conf.erb
     echo -n $"Log Sender server daemon: ${BEAVER_NAME}"
+gent.conf.erb
     su - "${BEAVER_USER}" -s '/bin/bash' -c "${BEAVER_CMD} >> ${BEAVER_LOG} 2>&1 & echo \$! > ${BEAVER_PID}"
+gent.conf.erb
     echo '.'
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_stop() {
+gent.conf.erb
     test -f "${BEAVER_BIN}" || exit 0
+gent.conf.erb
     if ! is_up
+gent.conf.erb
     then
+gent.conf.erb
         echo $'Log Sender server daemon already stopped.'
+gent.conf.erb
         return 0
+gent.conf.erb
     fi
+gent.conf.erb
     echo -n $"Stopping Log Sender server daemon: ${BEAVER_NAME}"
+gent.conf.erb
     do_kill
+gent.conf.erb
     local I='0'
+gent.conf.erb
     while is_up
+gent.conf.erb
     do
+gent.conf.erb
         echo -n '.'
+gent.conf.erb
         if [ "${I}" -gt 10 ]
+gent.conf.erb
         then
+gent.conf.erb
             do_kill_force
+gent.conf.erb
             I='0'
+gent.conf.erb
         else
+gent.conf.erb
             do_kill
+gent.conf.erb
         fi
+gent.conf.erb
         sleep 1
+gent.conf.erb
         I="$((I+1))"
+gent.conf.erb
     done
+gent.conf.erb
     echo '.'
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 beaver_pid() {
+gent.conf.erb
     tail -1 "${BEAVER_PID}" 2> /dev/null  
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 is_up() {
+gent.conf.erb
     PID="$(beaver_pid)"
+gent.conf.erb
     [ x"${PID}" != x ] && ps -p "${PID}" -o comm,args h 2> /dev/null | grep -qFw "${BEAVER_NAME}"
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_kill() {
+gent.conf.erb
     PID="$(beaver_pid)"
+gent.conf.erb
     [ x"${PID}" != x ] && su - "${BEAVER_USER}" -c "kill -TERM ${PID}"
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_kill_force() {
+gent.conf.erb
     PID="$(beaver_pid)"
+gent.conf.erb
     echo -n 'force'
+gent.conf.erb
     [ x"${PID}" != x ] && su - "${BEAVER_USER}" -c "kill -KILL ${PID}"
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_restart() {
+gent.conf.erb
     test -f "${BEAVER_BIN}" || exit 0
+gent.conf.erb
     do_stop
+gent.conf.erb
     sleep 1
+gent.conf.erb
     do_start
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_status() {
+gent.conf.erb
     test -f "${BEAVER_BIN}" || exit 0
+gent.conf.erb
     if is_up
+gent.conf.erb
     then
+gent.conf.erb
         echo "${BEAVER_NAME} is running."
+gent.conf.erb
         exit 0
+gent.conf.erb
     else
+gent.conf.erb
         echo "${BEAVER_NAME} is not running."
+gent.conf.erb
         exit 1
+gent.conf.erb
     fi
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 do_usage() {
+gent.conf.erb
     echo $"Usage: $0 {start | stop | restart | force-reload | status}" 
+gent.conf.erb
     exit 1
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 case "$1" in
+gent.conf.erb
 start)
+gent.conf.erb
     do_start
+gent.conf.erb
     exit "$?"
+gent.conf.erb
     ;;
+gent.conf.erb
 stop)
+gent.conf.erb
     do_stop
+gent.conf.erb
     exit "$?"
+gent.conf.erb
     ;;
+gent.conf.erb
 restart|force-reload)
+gent.conf.erb
     do_restart
+gent.conf.erb
     exit "$?"
+gent.conf.erb
     ;;
+gent.conf.erb
 status)
+gent.conf.erb
     do_status
+gent.conf.erb
     ;;
+gent.conf.erb
 *)
+gent.conf.erb
     do_usage
+gent.conf.erb
     ;;
+gent.conf.erb
 esac
+gent.conf.erb
 
+gent.conf.erb

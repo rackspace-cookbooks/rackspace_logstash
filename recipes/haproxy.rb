@@ -9,35 +9,35 @@
 
 include_recipe 'logrotate'
 
-directory "#{node['logstash']['basedir']}/server/apache_logs" do
+directory "#{node['rackspace_logstash']['basedir']}/server/apache_logs" do
   action :create
   mode '0755'
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
 end
 
 link '/var/lib/logstash/apache_logs' do
-  to "#{node['logstash']['basedir']}/server/apache_logs"
+  to "#{node['rackspace_logstash']['basedir']}/server/apache_logs"
 end
 
 directory '/opt/logstash/server/etc/patterns' do
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
   mode '0774'
 end
 
 # create pattern_file  for haproxy
 cookbook_file '/opt/logstash/server/etc/patterns/haproxy' do
   source 'haproxy'
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
   mode '0774'
 end
 
 # set logrotate  for /opt/logstash/server/apache_logs
 logrotate_app 'apache_logs' do
-  path node['logstash']['server']['logrotate_target']
+  path node['rackspace_logstash']['server']['logrotate_target']
   frequency 'daily'
-  create    "664 #{node['logstash']['user']} #{node['logstash']['user']}"
+  create "664 #{node['rackspace_logstash']['user']} #{node['rackspace_logstash']['user']}"
   rotate '30'
 end

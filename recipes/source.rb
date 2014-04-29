@@ -6,31 +6,31 @@ include_recipe 'rackspace_logstash::default'
 
 package 'wget'
 
-logstash_version = node['logstash']['source']['sha'] || "v#{node['logstash']['server']['version']}"
+logstash_version = node['rackspace_logstash']['source']['sha'] || "v#{node['rackspace_logstash']['server']['version']}"
 
-directory "#{node['logstash']['basedir']}/source" do
+directory "#{node['rackspace_logstash']['basedir']}/source" do
   action :create
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
   mode '0755'
 end
 
-git "#{node['logstash']['basedir']}/source" do
-  repository node['logstash']['source']['repo']
+git "#{node['rackspace_logstash']['basedir']}/source" do
+  repository node['rackspace_logstash']['source']['repo']
   reference logstash_version
   action :sync
-  user node['logstash']['user']
-  group node['logstash']['group']
+  user node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
 end
 
 execute 'build-logstash' do
-  cwd "#{node['logstash']['basedir']}/source"
-  environment "{'JAVA_HOME' => node['logstash']['source']['java_home']}"
+  cwd "#{node['rackspace_logstash']['basedir']}/source"
+  environment "{'JAVA_HOME' => node['rackspace_logstash']['source']['java_home']}"
   user 'root'
   # This variant is useful for troubleshooting stupid environment problems
   # command "make clean && make VERSION=#{logstash_version} --debug > /tmp/make.log 2>&1"
   command "make clean && make VERSION=#{logstash_version}"
   action :run
-  creates "#{node['logstash']['basedir']}/source/build/logstash-#{logstash_version}-monolithic.jar"
-  not_if "test -f #{node['logstash']['basedir']}/source/build/logstash-#{logstash_version}-monolithic.jar"
+  creates "#{node['rackspace_logstash']['basedir']}/source/build/logstash-#{logstash_version}-monolithic.jar"
+  not_if "test -f #{node['rackspace_logstash']['basedir']}/source/build/logstash-#{logstash_version}-monolithic.jar"
 end

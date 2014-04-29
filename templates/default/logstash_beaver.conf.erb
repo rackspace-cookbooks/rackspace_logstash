@@ -1,20 +1,40 @@
 description "Logstash beaver"
+gent.conf.erb
 author "Chef"
+gent.conf.erb
 
+gent.conf.erb
 start on (filesystem and net-device-up)
+gent.conf.erb
 stop on runlevel [!2345]
+gent.conf.erb
 
+gent.conf.erb
 respawn
+gent.conf.erb
 respawn limit 5 30
+gent.conf.erb
 
+gent.conf.erb
 <% if @supports_setuid %>
+gent.conf.erb
 setuid <%= @user %>
+gent.conf.erb
 setgid <%= @group %>
+gent.conf.erb
 <% end %>
+gent.conf.erb
 chdir <%= node['logstash']['basedir'] %>/beaver
+gent.conf.erb
 
+gent.conf.erb
 console output
+gent.conf.erb
 
+gent.conf.erb
 exec <%= @cmd %> >> <%= @log %> 2>&1
+gent.conf.erb
 
+gent.conf.erb
 emits logstash-beaver-running
+gent.conf.erb

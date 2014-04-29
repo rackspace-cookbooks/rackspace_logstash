@@ -7,7 +7,7 @@ include_recipe 'rackspace_logstash::default'
 include_recipe 'python::default'
 include_recipe 'logrotate'
 
-if node['logstash']['agent']['install_zeromq']
+if node['rackspace_logstash']['agent']['install_zeromq']
   case
   when platform_family?('rhel')
     include_recipe 'yumrepo::zeromq'
@@ -22,7 +22,7 @@ if node['logstash']['agent']['install_zeromq']
     end
     apt_repository 'libpgm-ppa' do
       uri 'http://ppa.launchpad.net/chris-lea/libpgm/ubuntu'
-      distribution  node['lsb']['codename']
+      distribution node['lsb']['codename']
       components ['main']
       keyserver 'keyserver.ubuntu.com'
       key 'C7917B12'
@@ -30,28 +30,28 @@ if node['logstash']['agent']['install_zeromq']
       notifies :run, 'execute[apt-get update]', :immediately
     end
   end
-  node['logstash']['zeromq_packages'].each { |p| package p }
-  python_pip node['logstash']['beaver']['zmq']['pip_package'] do
+  node['rackspace_logstash']['zeromq_packages'].each { |p| package p }
+  python_pip node['rackspace_logstash']['beaver']['zmq']['pip_package'] do
     action :install
   end
 end
 
 package 'git'
 
-basedir = node['logstash']['basedir'] + '/beaver'
+basedir = node['rackspace_logstash']['basedir'] + '/beaver'
 
 conf_file = "#{basedir}/etc/beaver.conf"
-format = node['logstash']['beaver']['format']
-log_file = "#{node['logstash']['log_dir']}/logstash_beaver.log"
-pid_file = "#{node['logstash']['pid_dir']}/logstash_beaver.pid"
+format = node['rackspace_logstash']['beaver']['format']
+log_file = "#{node['rackspace_logstash']['log_dir']}/logstash_beaver.log"
+pid_file = "#{node['rackspace_logstash']['pid_dir']}/logstash_beaver.pid"
 
 logstash_server_ip = nil
 if Chef::Config[:solo]
-  logstash_server_ip = node['logstash']['beaver']['server_ipaddress'] if node['logstash']['beaver']['server_ipaddress']
-elsif !node['logstash']['beaver']['server_ipaddress'].nil?
-  logstash_server_ip = node['logstash']['beaver']['server_ipaddress']
-elsif node['logstash']['beaver']['server_role']
-  logstash_server_results = search(:node, "roles:#{node['logstash']['beaver']['server_role']}")
+  logstash_server_ip = node['rackspace_logstash']['beaver']['server_ipaddress'] if node['rackspace_logstash']['beaver']['server_ipaddress']
+elsif node['rackspace_logstash']['beaver']['server_ipaddress']
+  logstash_server_ip = node['rackspace_logstash']['beaver']['server_ipaddress']
+elsif node['rackspace_logstash']['beaver']['server_role']
+  logstash_server_results = search(:node, "roles:#{node['rackspace_logstash']['beaver']['server_role']}")
   unless logstash_server_results.empty?
     logstash_server_ip = logstash_server_results[0]['ipaddress']
   end
@@ -59,8 +59,8 @@ end
 
 # create some needed directories and files
 directory basedir do
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
   recursive true
 end
 
@@ -70,29 +70,29 @@ end
   File.dirname(pid_file)
 ].each do |dir|
   directory dir do
-    owner node['logstash']['user']
-    group node['logstash']['group']
+    owner node['rackspace_logstash']['user']
+    group node['rackspace_logstash']['group']
     recursive true
-    not_if { ::File.exists?(dir) }
+    not_if { ::File.exist?(dir) }
   end
 end
 
 [log_file, pid_file].each do |f|
   file f do
     action :touch
-    owner node['logstash']['user']
-    group node['logstash']['group']
+    owner node['rackspace_logstash']['user']
+    group node['rackspace_logstash']['group']
     mode '0640'
   end
 end
 
-python_pip node['logstash']['beaver']['pip_package'] do
+python_pip node['rackspace_logstash']['beaver']['pip_package'] do
   action :install
 end
 
 # inputs
 files = []
-node['logstash']['beaver']['inputs'].each do |ins|
+node['rackspace_logstash']['beaver']['inputs'].each do |ins|
   ins.each do |name, hash|
     case name
     when 'file' then
@@ -110,7 +110,7 @@ end
 # outputs
 outputs = []
 conf = {}
-node['logstash']['beaver']['outputs'].each do |outs|
+node['rackspace_logstash']['beaver']['outputs'].each do |outs|
   outs.each do |name, hash|
     case name
     when 'rabbitmq', 'amqp' then
@@ -156,8 +156,8 @@ cmd = "beaver  -t #{output} -c #{conf_file} -F #{format}"
 template conf_file do
   source 'beaver.conf.erb'
   mode 0640
-  owner node['logstash']['user']
-  group node['logstash']['group']
+  owner node['rackspace_logstash']['user']
+  group node['rackspace_logstash']['group']
   variables(
             conf: conf,
             files: files
@@ -190,8 +190,8 @@ if use_upstart
     source 'logstash_beaver.conf.erb'
     variables(
               cmd: cmd,
-              group: node['logstash']['group'],
-              user: node['logstash']['user'],
+              group: node['rackspace_logstash']['group'],
+              user: node['rackspace_logstash']['user'],
               log: log_file,
               supports_setuid: supports_setuid
               )
@@ -210,7 +210,7 @@ else
     variables(
               cmd: cmd,
               pid_file: pid_file,
-              user: node['logstash']['user'],
+              user: node['rackspace_logstash']['user'],
               log: log_file,
               platform: node['platform']
               )
@@ -227,8 +227,8 @@ logrotate_app 'logstash_beaver' do
   cookbook 'logrotate'
   path log_file
   frequency 'daily'
-  postrotate node['logstash']['beaver']['logrotate']['postrotate']
-  options node['logstash']['beaver']['logrotate']['options']
+  postrotate node['rackspace_logstash']['beaver']['logrotate']['postrotate']
+  options node['rackspace_logstash']['beaver']['logrotate']['options']
   rotate 30
-  create "0640 #{node['logstash']['user']} #{node['logstash']['group']}"
+  create "0640 #{node['rackspace_logstash']['user']} #{node['rackspace_logstash']['group']}"
 end

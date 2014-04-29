@@ -1,170 +1,340 @@
 #!/usr/bin/env bash
+gent.conf.erb
 #
+gent.conf.erb
 # logstash
+gent.conf.erb
 #
+gent.conf.erb
 # chkconfig:   - 57 47
+gent.conf.erb
 # description: logstash
+gent.conf.erb
 # processname: logstash
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 PIDDIR="<%= node['logstash']['pid_dir'] %>"
+gent.conf.erb
 export PIDFILE="$PIDDIR/<%= @name %>.pid"
+gent.conf.erb
 export LS_HOME="<%= "#{node['logstash']['basedir']}/#{@name}" %>"
+gent.conf.erb
 export LS_CONFIG="$LS_HOME/etc/<%= @config_file %>"
+gent.conf.erb
 LS_USER="<%= node['logstash']['user'] %>"
+gent.conf.erb
 LOGDIR="<%= node['logstash']['log_dir'] %>"
+gent.conf.erb
 LS_LOG="$LOGDIR/<%= @name %>.log"
+gent.conf.erb
 export JAVA_OPTS="-server -Xms<%= @min_heap %> -Xmx<%= @max_heap %> -Djava.io.tmpdir=$LS_HOME/tmp/"
+gent.conf.erb
 BIN_SCRIPT="/usr/bin/env java $JAVA_OPTS -jar $LS_HOME/lib/logstash.jar agent -f $LS_CONFIG > $LS_LOG 2>&1 &  echo \$! > $PIDFILE"
+gent.conf.erb
 
+gent.conf.erb
 if [ -f /etc/init.d/functions ] ; then
+gent.conf.erb
   . /etc/init.d/functions
+gent.conf.erb
 fi
+gent.conf.erb
 
+gent.conf.erb
 start() {
+gent.conf.erb
 
+gent.conf.erb
   if [ ! -d "$PIDDIR" ] ; then
+gent.conf.erb
     mkdir "$PIDDIR"
+gent.conf.erb
     chown -R $LS_USER:$LS_USER $PIDDIR
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   if [ ! -d "$LOGDIR" ] ; then
+gent.conf.erb
     mkdir "$LOGDIR"
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   chown -R $LS_USER:$LS_USER $LOGDIR $PIDDIR
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
   if [ -f $PIDFILE ]; then
+gent.conf.erb
     echo -e "\033[31;1mPID file found in $PIDFILE, already running?\033[0m"
+gent.conf.erb
     ls_pid="$(cat $PIDFILE)"
+gent.conf.erb
     pid_running="$( ps ax | grep 'java' | grep $ls_pid )"
+gent.conf.erb
 
+gent.conf.erb
     if [ ! -z "$pid_running" ] ; then
+gent.conf.erb
       echo -e "\033[31;1mPID $ls_pid still alive, logstash is already running. Doing nothing\033[0m"
+gent.conf.erb
       return 1
+gent.conf.erb
     fi
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   echo -e "\033[1mStarting logstash...\033[0m"
+gent.conf.erb
   pushd $LS_HOME  > /dev/null 2>&1
+gent.conf.erb
   su $LS_USER -c "$BIN_SCRIPT" > /dev/null 2>&1
+gent.conf.erb
   ls_pid=$!
+gent.conf.erb
   result=$?
+gent.conf.erb
   popd  > /dev/null 2>&1
+gent.conf.erb
 
+gent.conf.erb
   if [ $result -ne 0 ] ; then
+gent.conf.erb
     failure
+gent.conf.erb
     echo -e "Logstash did not start successfully"
+gent.conf.erb
     exit 1
+gent.conf.erb
   else
+gent.conf.erb
     success
+gent.conf.erb
     echo -e "Logstash started successfully"
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 function stop() {
+gent.conf.erb
   echo -n -e "\033[1mStopping logstash...\033[0m"
+gent.conf.erb
 
+gent.conf.erb
   if [ -z "$SHUTDOWN_WAIT" ]; then
+gent.conf.erb
     SHUTDOWN_WAIT=5
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   if [ ! -z "$PIDFILE" ]; then
+gent.conf.erb
     if [ -f "$PIDFILE" ]; then
+gent.conf.erb
       kill -0 `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
       if [ $? -gt 0 ]; then
+gent.conf.erb
         echo "PID file ($PIDFILE) found but no matching process was found. Nothing to do."
+gent.conf.erb
         return 0
+gent.conf.erb
       fi
+gent.conf.erb
     else
+gent.conf.erb
       echo "\$PIDFILE was set ($PIDFILE) but the specified file does not exist. Is Logstash running? Assuming it has stopped and pro\
+gent.conf.erb
         ceeding."
+gent.conf.erb
       return 0
+gent.conf.erb
     fi
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   kill `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
 
+gent.conf.erb
   if [ ! -z "$PIDFILE" ]; then
+gent.conf.erb
     if [ -f "$PIDFILE" ]; then
+gent.conf.erb
       while [ $SHUTDOWN_WAIT -ge 0 ]; do
+gent.conf.erb
         kill -0 `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
         if [ $? -gt 0 ]; then
+gent.conf.erb
           rm $PIDFILE
+gent.conf.erb
           break
+gent.conf.erb
         fi
+gent.conf.erb
         if [ $SHUTDOWN_WAIT -gt 0 ]; then
+gent.conf.erb
           sleep 1
+gent.conf.erb
         fi
+gent.conf.erb
         SHUTDOWN_WAIT=`expr $SHUTDOWN_WAIT - 1 `
+gent.conf.erb
       done
+gent.conf.erb
       # still not dead, we may need to resort to drastic measures
+gent.conf.erb
       if [ -f "$PIDFILE" ]; then
+gent.conf.erb
         kill -0 `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
         if [ $? -eq 0 ]; then
+gent.conf.erb
           echo "Application still alive, sleeping for 20 seconds before sending SIGKILL"
+gent.conf.erb
           sleep 20
+gent.conf.erb
           kill -0 `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
           if [ $? -eq 0 ]; then
+gent.conf.erb
             kill -9 `cat $PIDFILE` >/dev/null 2>&1
+gent.conf.erb
             echo "Killed with extreme prejudice"
+gent.conf.erb
           else
+gent.conf.erb
             echo "Application stopped, no need to use SIGKILL"
+gent.conf.erb
           fi
+gent.conf.erb
           rm $PIDFILE
+gent.conf.erb
         fi
+gent.conf.erb
       fi
+gent.conf.erb
     fi
+gent.conf.erb
   fi
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 restart() {
+gent.conf.erb
   stop
+gent.conf.erb
   start
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 status() {
+gent.conf.erb
   # GOT PIDFILE?
+gent.conf.erb
   [ -f $PIDFILE ] && pid=$(cat $PIDFILE)
+gent.conf.erb
 
+gent.conf.erb
   # RUNNING
+gent.conf.erb
   if [[ $pid && -d "/proc/$pid" ]]; then
+gent.conf.erb
     success
+gent.conf.erb
     echo -e "Logstash is running with pid $pid"
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   # NOT RUNNING
+gent.conf.erb
   if [[ ! $pid || ! -d "/proc/$pid" ]]; then
+gent.conf.erb
     echo "Logstash not running"
+gent.conf.erb
   fi
+gent.conf.erb
 
+gent.conf.erb
   # STALE PID FOUND
+gent.conf.erb
   if [[ ! -d "/proc/$pid" && -f $PIDFILE ]]; then
+gent.conf.erb
     echo -e "\033[1;31;40m[!] Stale PID found in $PIDFILE\033[0m"
+gent.conf.erb
   fi
+gent.conf.erb
 }
+gent.conf.erb
 
+gent.conf.erb
 
+gent.conf.erb
 case "$1" in
+gent.conf.erb
   start)
+gent.conf.erb
     start
+gent.conf.erb
     ;;
+gent.conf.erb
   stop)
+gent.conf.erb
     stop
+gent.conf.erb
     ;;
+gent.conf.erb
   restart)
+gent.conf.erb
     restart
+gent.conf.erb
     ;;
+gent.conf.erb
   status)
+gent.conf.erb
     status $2
+gent.conf.erb
     ;;
+gent.conf.erb
   *)
+gent.conf.erb
     echo $"Usage: $0 {start|stop|restart|status [-v]|}"
+gent.conf.erb
     exit 1
+gent.conf.erb
 esac
+gent.conf.erb
 
+gent.conf.erb
 exit $?
+gent.conf.erb

@@ -1,19 +1,38 @@
 #!/bin/sh
+gent.conf.erb
 
+gent.conf.erb
 ulimit -Hn 65550
+gent.conf.erb
 ulimit -Sn 65550
+gent.conf.erb
 
+gent.conf.erb
 cd /<%= node['logstash']['basedir'] %>/server/
+gent.conf.erb
 exec 2>&1
+gent.conf.erb
 # Need to set LOGSTASH_HOME and HOME so sincedb will work
+gent.conf.erb
 LOGSTASH_HOME="<%= node['logstash']['basedir'] %>/server"
+gent.conf.erb
 GC_OPTS="<%= node['logstash']['server']['gc_opts'] %>"
+gent.conf.erb
 JAVA_OPTS="-server -Xms<%= node['logstash']['server']['xms'] %> -Xmx<%= node['logstash']['server']['xmx'] %> -Djava.io.tmpdir=$LOGSTASH_HOME/tmp/ <%= node['logstash']['server']['java_opts'] %> <%= '-Djava.net.preferIPv4Stack=true' if node['logstash']['agent']['ipv4_only'] %>"
+gent.conf.erb
 LOGSTASH_OPTS="agent -f $LOGSTASH_HOME/etc/logstash.conf -l <%= node['logstash']['log_dir'] %>/logstash.log"
+gent.conf.erb
 <% if node['logstash']['server']['pluginpath'] -%>
+gent.conf.erb
 LOGSTASH_OPTS="$LOGSTASH_OPTS --pluginpath <%= node['logstash']['server']['pluginpath'] %>"
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 <% if node['logstash']['agent']['debug'] -%>
+gent.conf.erb
 LOGSTASH_OPTS="$LOGSTASH_OPTS -v"
+gent.conf.erb
 <% end -%>
+gent.conf.erb
 HOME=$LOGSTASH_HOME exec chpst -u <%= node["logstash"]["user"] %> java $JAVA_OPTS $GC_OPTS -jar $LOGSTASH_HOME/lib/logstash.jar $LOGSTASH_OPTS
+gent.conf.erb
