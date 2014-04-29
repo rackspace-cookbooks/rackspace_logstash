@@ -1,10 +1,6 @@
 require 'rubygems'
 # Class LogstashConf
-class Erubis
-  # Class LogstashConf
-  class RubyEvaluator
-  # Class LogstashConf
-    class LogstashConf
+class Erubis::RubyEvaluator::LogstashConf
       def self.key_to_str(k)
         case k.class.to_s
         when 'String'
@@ -68,5 +64,3 @@ class Erubis
         return result.join("\n")
       end
     end
-  end
-end
